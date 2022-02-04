@@ -2,6 +2,8 @@
 
 This project consists of hardware files and software for a coin-battery operated laser tester that fits in a MiniDisk case.
 
+![IMG_20220204_181101](https://user-images.githubusercontent.com/75824/152572817-d54990b7-bd3a-4de0-8bd5-8010fbc4c767.jpg)
+
 ## Hardware
 
 Schematics, BOM and PCB layout files are available in the hardware directory.
