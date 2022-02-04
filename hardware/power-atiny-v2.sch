@@ -1,0 +1,388 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Sensor_Optical:BPW34-SMD D3
+U 1 1 619CF287
+P 4600 3200
+F 0 "D3" H 4550 3495 50  0000 C CNN
+F 1 "BPW34-SMD" H 4550 3404 50  0000 C CNN
+F 2 "OptoDevice:Osram_SMD-DIL2_4.5x4.0mm" H 4600 3375 50  0001 C CNN
+F 3 "http://www.osram-os.com/Graphics/XPic5/00215430_0.pdf/BPW%2034%20S.pdf" H 4550 3200 50  0001 C CNN
+	1    4600 3200
+	-1   0    0    1   
+$EndComp
+$Comp
+L Switch:SW_SP3T SW1
+U 1 1 619D02F8
+P 4300 1850
+F 0 "SW1" V 4254 1996 50  0000 L CNN
+F 1 "SW_SP3T" V 4345 1996 50  0001 L CNN
+F 2 "Button_Switch_SMD:SW_SP3T_PCM13" H 3675 2025 50  0001 C CNN
+F 3 "~" H 3675 2025 50  0001 C CNN
+	1    4300 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Battery_Cell BT1
+U 1 1 619D1C9E
+P 1300 2950
+F 0 "BT1" H 1418 3046 50  0000 L CNN
+F 1 "Battery_Cell" H 1418 2955 50  0000 L CNN
+F 2 "Battery:BatteryHolder_Keystone_3002_1x2032" V 1300 3010 50  0001 C CNN
+F 3 "~" V 1300 3010 50  0001 C CNN
+	1    1300 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C2
+U 1 1 619D47E7
+P 2050 2900
+F 0 "C2" H 2168 2946 50  0000 L CNN
+F 1 "68uF" H 2168 2855 50  0000 L CNN
+F 2 "Capacitor_Tantalum_SMD:CP_EIA-3528-21_Kemet-B_Pad1.50x2.35mm_HandSolder" H 2088 2750 50  0001 C CNN
+F 3 "~" H 2050 2900 50  0001 C CNN
+	1    2050 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C1
+U 1 1 619DFF84
+P 1700 2900
+F 0 "C1" H 1815 2946 50  0000 L CNN
+F 1 "100nF" H 1815 2855 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder" H 1738 2750 50  0001 C CNN
+F 3 "~" H 1700 2900 50  0001 C CNN
+	1    1700 2900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 2750 1700 2750
+Connection ~ 1700 2750
+Wire Wire Line
+	1700 2750 2050 2750
+Wire Wire Line
+	1300 3050 1700 3050
+Connection ~ 1700 3050
+Wire Wire Line
+	1700 3050 2050 3050
+Wire Wire Line
+	1700 3050 1700 3500
+Wire Wire Line
+	1700 3500 1700 3650
+Connection ~ 1700 3500
+$Comp
+L power:GND #PWR0101
+U 1 1 619E9499
+P 1700 3650
+F 0 "#PWR0101" H 1700 3400 50  0001 C CNN
+F 1 "GND" H 1705 3477 50  0000 C CNN
+F 2 "" H 1700 3650 50  0001 C CNN
+F 3 "" H 1700 3650 50  0001 C CNN
+	1    1700 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R5
+U 1 1 61A1931F
+P 4200 3350
+F 0 "R5" H 4259 3396 50  0000 L CNN
+F 1 "1k" H 4259 3305 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4200 3350 50  0001 C CNN
+F 3 "~" H 4200 3350 50  0001 C CNN
+	1    4200 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R7
+U 1 1 61A1A379
+P 4650 1750
+F 0 "R7" V 4600 1900 50  0000 C CNN
+F 1 "430k" V 4650 1750 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4650 1750 50  0001 C CNN
+F 3 "~" H 4650 1750 50  0001 C CNN
+	1    4650 1750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4200 3200 4200 3250
+Wire Wire Line
+	4200 3450 4200 3500
+Wire Wire Line
+	4500 1750 4550 1750
+Wire Wire Line
+	4750 1750 4950 1750
+$Comp
+L Device:LED_Dual_ACAC D4
+U 1 1 61A1D867
+P 5700 2700
+F 0 "D4" H 5700 3125 50  0000 C CNN
+F 1 "LED_Dual_ACAC" H 5700 3034 50  0000 C CNN
+F 2 "LED_SMD:LED_Avago_PLCC4_3.2x2.8mm_CW" H 5730 2700 50  0001 C CNN
+F 3 "~" H 5730 2700 50  0001 C CNN
+	1    5700 2700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4800 3200 5100 3200
+Wire Wire Line
+	1700 2100 1700 2750
+$Comp
+L power:VCC #PWR0111
+U 1 1 61A4EA4C
+P 3400 2200
+F 0 "#PWR0111" H 3400 2050 50  0001 C CNN
+F 1 "VCC" H 3415 2373 50  0000 C CNN
+F 2 "" H 3400 2200 50  0001 C CNN
+F 3 "" H 3400 2200 50  0001 C CNN
+	1    3400 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0112
+U 1 1 61A513D7
+P 5100 3200
+F 0 "#PWR0112" H 5100 3050 50  0001 C CNN
+F 1 "VCC" H 5115 3373 50  0000 C CNN
+F 2 "" H 5100 3200 50  0001 C CNN
+F 3 "" H 5100 3200 50  0001 C CNN
+	1    5100 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1700 2100 3400 2100
+Wire Wire Line
+	3400 2100 3400 2200
+Connection ~ 3400 2200
+Wire Wire Line
+	3400 2200 3400 2300
+$Comp
+L Device:LED_Dual_ACAC D1
+U 1 1 61AD0331
+P 6600 2700
+F 0 "D1" H 6600 3125 50  0000 C CNN
+F 1 "LED_Dual_ACAC" H 6600 3034 50  0000 C CNN
+F 2 "LED_SMD:LED_Avago_PLCC4_3.2x2.8mm_CW" H 6630 2700 50  0001 C CNN
+F 3 "~" H 6630 2700 50  0001 C CNN
+	1    6600 2700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR0102
+U 1 1 61AD678E
+P 4950 1700
+F 0 "#PWR0102" H 4950 1550 50  0001 C CNN
+F 1 "VCC" H 4965 1873 50  0000 C CNN
+F 2 "" H 4950 1700 50  0001 C CNN
+F 3 "" H 4950 1700 50  0001 C CNN
+	1    4950 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R8
+U 1 1 61AD75BA
+P 4650 1850
+F 0 "R8" V 4700 2000 50  0000 C CNN
+F 1 "100k" V 4650 1850 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4650 1850 50  0001 C CNN
+F 3 "~" H 4650 1850 50  0001 C CNN
+	1    4650 1850
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4500 1850 4550 1850
+Wire Wire Line
+	4750 1850 4950 1850
+Wire Wire Line
+	4500 1950 4550 1950
+Connection ~ 4950 1750
+Wire Wire Line
+	4950 1850 4950 1750
+$Comp
+L Device:R_Small R2
+U 1 1 61ADC42F
+P 4450 2700
+F 0 "R2" V 4254 2700 50  0000 C CNN
+F 1 "220" V 4345 2700 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4450 2700 50  0001 C CNN
+F 3 "~" H 4450 2700 50  0001 C CNN
+	1    4450 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R3
+U 1 1 61ADCD53
+P 4450 2800
+F 0 "R3" V 4254 2800 50  0000 C CNN
+F 1 "220" V 4345 2800 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4450 2800 50  0001 C CNN
+F 3 "~" H 4450 2800 50  0001 C CNN
+	1    4450 2800
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R4
+U 1 1 61ADD528
+P 4450 2900
+F 0 "R4" V 4254 2900 50  0000 C CNN
+F 1 "220" V 4345 2900 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 4450 2900 50  0001 C CNN
+F 3 "~" H 4450 2900 50  0001 C CNN
+	1    4450 2900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5300 2700 5300 2400
+Wire Wire Line
+	5300 2400 5600 2400
+Wire Wire Line
+	5600 2400 5600 2300
+Wire Wire Line
+	5600 2300 6500 2300
+Wire Wire Line
+	6500 2300 6500 2400
+Connection ~ 5600 2400
+Wire Wire Line
+	5600 3000 5450 3000
+Wire Wire Line
+	5450 3000 5450 2800
+Wire Wire Line
+	5450 2800 4550 2800
+Wire Wire Line
+	6500 3000 6500 3150
+Wire Wire Line
+	6500 3150 5950 3150
+Wire Wire Line
+	5600 3150 5600 3000
+Connection ~ 5600 3000
+Wire Wire Line
+	5950 3150 5950 2400
+Wire Wire Line
+	5950 2400 5800 2400
+Connection ~ 5950 3150
+Wire Wire Line
+	5950 3150 5600 3150
+Wire Wire Line
+	6500 3150 6850 3150
+Wire Wire Line
+	6850 3150 6850 2400
+Wire Wire Line
+	6850 2400 6700 2400
+Connection ~ 6500 3150
+Wire Wire Line
+	5800 3000 5800 3250
+Wire Wire Line
+	5800 3250 5300 3250
+Wire Wire Line
+	5300 3250 5300 2900
+Wire Wire Line
+	5300 2900 4550 2900
+Wire Wire Line
+	6700 3000 6700 3250
+Wire Wire Line
+	6700 3250 5800 3250
+Connection ~ 5800 3250
+Wire Wire Line
+	3400 3500 4200 3500
+Wire Wire Line
+	1700 3500 3400 3500
+Connection ~ 3400 3500
+$Comp
+L MCU_Microchip_ATtiny:ATtiny412-SS U1
+U 1 1 619CCD3F
+P 3400 2900
+F 0 "U1" H 2871 2946 50  0000 R CNN
+F 1 "ATtiny412-SS" H 2871 2855 50  0000 R CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 3400 2900 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/40001911A.pdf" H 3400 2900 50  0001 C CNN
+	1    3400 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R1
+U 1 1 61AEF8BD
+P 3900 1850
+F 0 "R1" V 3704 1850 50  0000 C CNN
+F 1 "249k" V 3795 1850 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" H 3900 1850 50  0001 C CNN
+F 3 "~" H 3900 1850 50  0001 C CNN
+	1    3900 1850
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4100 1850 4050 1850
+Wire Wire Line
+	3800 1850 3550 1850
+Wire Wire Line
+	3550 1850 3550 1700
+$Comp
+L power:GND #PWR0103
+U 1 1 61AF237A
+P 3550 1700
+F 0 "#PWR0103" H 3550 1450 50  0001 C CNN
+F 1 "GND" H 3555 1527 50  0000 C CNN
+F 2 "" H 3550 1700 50  0001 C CNN
+F 3 "" H 3550 1700 50  0001 C CNN
+	1    3550 1700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4050 1850 4050 2150
+Wire Wire Line
+	4050 2150 3600 2150
+Connection ~ 4050 1850
+Wire Wire Line
+	4050 1850 4000 1850
+Wire Wire Line
+	4200 3200 3650 3200
+Wire Wire Line
+	4200 3200 4500 3200
+Connection ~ 4200 3200
+Connection ~ 4500 3200
+Wire Wire Line
+	4500 3200 4600 3200
+Wire Wire Line
+	3650 3200 3650 3000
+Wire Wire Line
+	3650 3000 4000 3000
+Wire Wire Line
+	4000 3100 3600 3100
+Wire Wire Line
+	3600 2150 3600 3100
+Wire Wire Line
+	4050 2900 4050 2700
+Wire Wire Line
+	4050 2700 4000 2700
+Wire Wire Line
+	4550 2700 5300 2700
+Wire Wire Line
+	4050 2900 4350 2900
+Wire Wire Line
+	4250 2700 4350 2700
+Wire Wire Line
+	4000 2800 4250 2800
+Wire Wire Line
+	4250 2800 4250 2700
+Wire Wire Line
+	4350 2800 4300 2800
+Wire Wire Line
+	4300 2800 4300 2950
+Wire Wire Line
+	4300 2950 4000 2950
+Wire Wire Line
+	4000 2950 4000 2900
+Wire Wire Line
+	4950 1700 4950 1750
+$EndSCHEMATC
