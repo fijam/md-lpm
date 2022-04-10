@@ -9,15 +9,17 @@ byte calFactor = 100;
 uint16_t highestADC = 0;
 uint16_t currentADC = 0;
 uint16_t correctedVal = 0;
-byte loopCount = 0;
+uint16_t loopCount = 0;
 
-ISR(RTC_PIT_vect)
-{
+ISR(RTC_PIT_vect) {
   RTC.PITINTFLAGS = RTC_PI_bm;          // Clear interrupt flag
 }
 
-void RTC_init(void)                     // Arming the nugget
-{
+ISR(PORTA_PORT_vect) {
+  _PROTECTED_WRITE(RSTCTRL.SWRR,1);     // we have been woken up from long sleep, reset
+}
+
+void RTC_arm(void) {                     // Arming the nugget
   while (RTC.STATUS > 0)
   {
     ;                                   // Wait for all registers to synchronize
@@ -28,6 +30,9 @@ void RTC_init(void)                     // Arming the nugget
                  | RTC_PITEN_bm;        // Enable PIT counter: enabled
 }
 
+void RTC_disarm() {
+  RTC.PITCTRLA = RTC_PERIOD_OFF_gc &~ RTC_PITEN_bm;
+}
 
 void prepareSleep() {                   // don't leave any pins floating before going to sleep
   digitalWriteFast(2, LOW);
@@ -50,8 +55,7 @@ void pinModeCharlieTwo() {
   pinModeFast(2, OUTPUT);
 }
 
-// all the LEDs
-void leftred() {
+void leftred() {                         // all the LED combinations
   pinModeCharlieOne();
   digitalWriteFast(4, LOW);
   digitalWriteFast(3, HIGH);
@@ -83,8 +87,7 @@ void rightred() {
   digitalWriteFast(2, LOW);
 }
 
-// helpers
-void leftyellow () {
+void leftyellow () {                      // LED helpers
   leftred();
   leftgreen();
 }
@@ -99,8 +102,7 @@ void bothgreen () {
   leftgreen();
 }
 
-// cutoffs: 360, 725
-byte checkswitch() {
+byte checkswitch() {                                 // voltage divider cutoffs: 0, 360, 725
   uint16_t switchState = analogRead(1);
   if (switchState < 50) {                            // high switch setting  - WritPw
     return 3;
@@ -111,14 +113,12 @@ byte checkswitch() {
   if (switchState > 700 && switchState < 750) {      // middle switch setting - HrefPw
     return 2;
   }
-  return 0; // something went wrong
+  return 0;                                          // something went wrong
 }
 
-// deliberately debounce with delay as we
-// want to decide before going to sleep for 125ms
-byte checkswitchDb() {
+byte checkswitchDb() {                                // deliberately debounce with delay so we can decide before sleeping for 125ms
   analogReference(VDD);
-  analogRead(1); // discard first readout
+  analogRead(1);                                      // discard first readout
   byte switchCounter = 0;
   byte currentReading = checkswitch();
   byte lastState = 0;
@@ -129,51 +129,40 @@ byte checkswitchDb() {
     currentReading = checkswitch();
     if (lastState == currentReading) switchCounter++;
   }
-  if (switchCounter == 5) {
-    // if we got 5 identical readings in 15ms then we are good
+  if (switchCounter == 5) {                            // if we got 5 identical readings in 15ms then we are good
     return currentReading;
   }
-  else {
-    // we try again next time
+  else {                                               // we try again next time
     return 0;
   }
 }
 
 void setup() {
 
-  // prepare sleep mode
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);                  // prepare sleep mode
   sleep_enable();
+  RTC_arm();                                            // prepare PIT/RTC to wake up later
 
-  // prepare PIT/RTC to wake up later
-  RTC_init();
-
-  // initialize pins
-  pinModeFast(0, INPUT); // photodiode
-  pinModeFast(1, INPUT); // switch
-  pinModeFast(2, INPUT); // charlieplex
-  pinModeFast(3, INPUT); // charlieplex
-  pinModeFast(4, INPUT); // charlieplex
+  pinModeFast(0, INPUT);                                // photodiode
+  pinModeFast(1, INPUT);                                // switch
+  pinModeFast(2, INPUT);                                // charlieplex
+  pinModeFast(3, INPUT);                                // charlieplex
+  pinModeFast(4, INPUT);                                // charlieplex
   // 5 is UPDI
 
-  // save battery voltage level
-  analogReference(VDD);
+  analogReference(VDD);                                 // save battery voltage level
   VREF.CTRLA = VREF_ADC0REFSEL_1V5_gc;
-  analogSampleDuration(13); // no rush
-  uint16_t battery = analogRead(ADC_INTREF); // discard
+  analogSampleDuration(13);                             // no rush
+  uint16_t battery = analogRead(ADC_INTREF);            // discard
   battery = analogRead(ADC_INTREF);
-  EEPROM.put(48, battery); // battery goes to EEPROM offset 48
+  EEPROM.put(48, battery);                              // battery goes to EEPROM offset 48
 
-  // reset ADC reference
-  analogReference(INTERNAL2V5);
+  analogReference(INTERNAL2V5);                         // reset ADC reference
 
-  // read device calibration factor
+  calFactor = USERSIG.read(0);                          // read device calibration factor
   // this region of EEPROM is safe from chip erase
-  calFactor = USERSIG.read(0);
-
-
-  // LED check
-  leftred();
+  
+  leftred();                                            // LED check
   leftgreen();
   rightgreen();
   rightred();
@@ -181,27 +170,22 @@ void setup() {
 }
 
 void loop() {
-  loopCount++;
   currentState = checkswitchDb();
-  if (currentState != previousState) {
-    // the switch was moved since last time, we have work to do
-    // save the last sensor reading to EEPROM
-    switch (previousState) {
-      case 3: // Writ goes to EEPROM offset 0
+  if (currentState != previousState) {                 // switch has moved since last time, we have work to do
+    switch (previousState) {                           // save the last sensor reading to EEPROM
+      case 3:                                          // Writ goes to EEPROM offset 0
         EEPROM.put(0, highestADC);
         break;
-      case 2: // Href goes to offset 16
+      case 2:                                          // Href goes to offset 16
         EEPROM.put(16, highestADC);
         break;
-      case 1: // Lref goes to offset 32
+      case 1:                                          // Lref goes to offset 32
         EEPROM.put(32, highestADC);
         break;
     }
-    // reset global counters
-    highestADC = 0;
+    highestADC = 0;                                    // reset global counters
     loopCount = 0;
-    // blink LED to indicate change was noted
-    switch (currentState) {
+    switch (currentState) {                            // blink LED to indicate a change was noted
       case 1:
         rightred();
         break;
@@ -215,8 +199,7 @@ void loop() {
     previousState = currentState;
   }
 
-  // use appropriate reference for switch state
-  switch (currentState) {
+  switch (currentState) {                               // use appropriate reference for switch state
     case 1:
       analogReference(INTERNAL1V1);
       break;
@@ -224,22 +207,19 @@ void loop() {
       analogReference(INTERNAL1V1);
       break;
     case 3:
-      analogReference(VDD); // full range of ADC needed to reach 5mW
+      analogReference(VDD);                             // full range of ADC needed to reach 5mW
       break;
   }
-  // discard the first read
-  currentADC = analogRead(0);
-  // keep track of highest recorded value on photodiode
-  currentADC = analogRead(0);
+  currentADC = analogRead(0);                           // discard
+  currentADC = analogRead(0);                           // keep track of highest recorded value on photodiode
   if (currentADC > highestADC) {
     highestADC = currentADC;
   }
-
-  // every 12 measurements (~1.8 second) indicate result
-  if (loopCount == 12) {
-    // time to blink some LEDs
+  
+  loopCount++;
+  if (loopCount % 12 == 0) {                             // every 12 measurements (~1.8 second) indicate result
     switch (currentState) {
-      case 1: // lo
+      case 1:                                            // LRef
       correctedVal = (highestADC * calFactor);
         if (correctedVal < 25900) leftred();
         if (correctedVal >= 25900 && correctedVal < 29500) leftyellow();
@@ -249,7 +229,7 @@ void loop() {
         if (correctedVal >= 44000 && correctedVal < 47700) rightyellow();
         if (correctedVal >= 47700) rightred();
         break;
-      case 2: // hi
+      case 2:                                             // Href
       correctedVal = (highestADC * calFactor);
         if (correctedVal < 30400) leftred();
         if (correctedVal >= 30400 && correctedVal < 35000) leftyellow();
@@ -259,7 +239,7 @@ void loop() {
         if (correctedVal >= 53100 && correctedVal < 57700) rightyellow();
         if (correctedVal >= 57700) rightred();
         break;
-      case 3: // writ
+      case 3:                                              // Writ
       // no need for high accuracy
         if (highestADC < 720) leftred();
         if (highestADC >= 720 && highestADC < 780) leftyellow();
@@ -270,7 +250,14 @@ void loop() {
         if (highestADC >= 1020) rightred();
         break;
     }
-    loopCount = 0;
+
+    if (currentState == 3 && loopCount % 4500 == 0) {       // if user hasn't done anything for ~10 minutes 
+      rightred();                                           // express displeasure
+      leftred();
+      RTC_disarm();                                         // sleep until woken from switch interrupt
+      PORTA.PIN7CTRL  = 0b00000001;      
+   }
+
   }
   prepareSleep();
   sleep_cpu(); // wait for the prince's kiss
