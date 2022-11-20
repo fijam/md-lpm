@@ -15,6 +15,9 @@ def read_eeprom_offset(offset):
     byte = backend.read_memory(memory_name='eeprom', numbytes=2, offset_byte=offset)
     return int.from_bytes(byte[0].data, byteorder="little")
 
+def write_eeprom_offset(offset, data):
+    backend.write_memory(memory_name='eeprom', offset_byte=offset, data=data)
+
 
 def value_to_readout(val, level):
     if val == 65535:
@@ -30,6 +33,8 @@ def parse_arguments():
                         help='USB-serial adapter port (e.g. COM5)')
     parser.add_argument('--cal-factor', dest='cal_factor', action='store',
                         help='override device-specific calibration (e.g. 95)')
+    parser.add_argument('--clear', dest='clear', action='store_true',
+                        help='clear the memory after reading')
     return parser.parse_args()
 
 
@@ -66,6 +71,13 @@ print(f"  HrefPw: {(value_to_readout(val_href,2))}")
 print(f"  LrefPw: {(value_to_readout(val_lref,1))}")
 print(f"Calibration factor: {cal_factor}%")
 print(f"Battery level: {'good' if batt_volts>=2.84 else 'low'} ({batt_volts:.3f}V)")
+
+if parser.clear:
+    write_eeprom_offset(0, [0xFF, 0xFF])
+    write_eeprom_offset(16, [0xFF, 0xFF])
+    write_eeprom_offset(32, [0xFF, 0xFF])
+    print()
+    print("Memory cleared")
 
 input('\n Press any key to exit.')
 
